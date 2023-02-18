@@ -1,0 +1,121 @@
+<html lang="en">
+<!-- feel free to revise this file -->
+
+<head>
+    <h1 style="color:blue;text-align:center"> CDS4004 To Do List </h1>
+	<meta charset="UTF-8">
+	<p style="text-align:center">&#128151;</p>
+	
+	<style>
+		/*write your css rules here*/
+
+		textarea {
+			width: 100%;
+		}
+
+		li {
+			font-size: 30px;
+		}
+	</style>
+</head>
+
+<body>
+	<textarea id='text' rows="3">Dinner, 1; Exercise, 2; Study, 3</textarea>
+	<br />
+	<div class='divButton'>
+		<button id='btn_add'>Add</button>
+		<button id='btn_hide'>Toggle</button>
+		<button id='btnSendEmail'>Email</button>
+	</div>
+
+	<ol id='order_list'>
+	</ol>
+</body>
+
+<script>
+	// write your Javascript here
+	document.getElementById("btn_add").addEventListener("click", addToList);
+
+	function addToList() {
+
+		var temp = document.getElementById("text").value;
+
+		var tempNewArray = document.getElementById("order_list").innerHTML;
+
+		const tempArray = temp.split(";");
+
+		if (document.getElementById("order_list").style.opacity == "") {
+			document.getElementById("order_list").style.opacity = 1;
+		}
+
+		if (document.getElementById("order_list").style.opacity == 1) {
+			tempArray.forEach(element => {
+
+				const splitArray = element.split(",");
+
+				tempColor = null;
+				if (splitArray[1] == 1) {
+					tempColor = "red"
+				} else if (splitArray[1] == 2) {
+					tempColor = "black"
+				} else if (splitArray[1] == 3) {
+					tempColor = "grey"
+				}
+
+				tempNewArray = tempNewArray + "<li style='color:" + tempColor + "' class='find'> <span class='locate'>" + splitArray[0] + "</span></li>";
+
+			});
+
+			document.getElementById("order_list").innerHTML = tempNewArray;
+
+			let ol = document.querySelector('ol');
+
+			document.querySelectorAll('.find').forEach((element) => {
+
+				element.onclick = event => {
+					if (document.getElementById("order_list").style.opacity == 1) {
+						if (event.detail === 1) {
+							if (element.innerHTML.includes("<strike>")) {
+								var deletePrefix = element.innerHTML.replace('<strike>', '');
+								var deleteSuffix = deletePrefix.replace('</strike>', '');
+								element.innerHTML = deleteSuffix;
+							} else {
+								element.innerHTML = "<strike>" + element.innerHTML + "</strike>";
+							}
+						} else if (event.detail === 2) {
+							if (window.confirm("Are you sure to delete the item?")) {
+								element.remove();
+							}
+						}
+					}
+				};
+			});
+		}
+
+	}
+
+	document.getElementById("btn_hide").addEventListener("click", clickToHide);
+
+	function clickToHide() {
+		if (document.getElementById("order_list").style.opacity == 1) {
+			document.getElementById("order_list").style.opacity = 0;
+		} else {
+			document.getElementById("order_list").style.opacity = 1;
+		}
+	}
+
+	document.getElementById("btnSendEmail").addEventListener("click", writeEmail);
+
+	function writeEmail() {
+		var temp = ""
+		let ol = document.querySelector('ol');
+
+		document.querySelectorAll('.locate').forEach((element) => {
+			temp=temp+element.innerHTML+" "
+		});
+		location.href = "mailto:example@example.com?subject=Task&body=" + temp;
+	}
+
+</script>
+
+</html>
